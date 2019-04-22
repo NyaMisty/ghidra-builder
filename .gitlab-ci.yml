@@ -1,6 +1,5 @@
 stages:
     - pre
-    - download
     - build
 
 builder:
@@ -18,15 +17,6 @@ builder:
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
 
-download:
-    stage: download
-    image: ${CI_REGISTRY_IMAGE}/builder
-    script:
-        - ./download.sh
-    artifacts:
-        paths:
-            - Downloads
-
 .build:
     stage: build
     image: ${CI_REGISTRY_IMAGE}/builder
@@ -34,7 +24,7 @@ download:
         GIT_SUBMODULE_STRATEGY: recursive
     script:
         - ./download.sh
-        - mv flatRepo /root/flatRepo
+        - cp -r flatRepo /root/flatRepo
         - unzip Downloads/gradle*.zip
         - cd ghidra 
         - git checkout ${TAG}
@@ -50,10 +40,12 @@ dev:
 
 9.0.1:
     extends: .build
+    when: manual
     variables:
         TAG: Ghidra_9.0.1_build
 
 9.0.2:
     extends: .build
+    when: manual
     variables:
         TAG: Ghidra_9.0.2_build
