@@ -5,6 +5,7 @@ stages:
     - distrib
 
 builder:
+    stage: pre
     image: docker
     script:
         - docker build -t ${CI_REGISTRY_IMAGE}/builder .
