@@ -8,7 +8,8 @@ builder:
     stage: pre
     image: docker
     script:
-        - docker build -t ${CI_REGISTRY_IMAGE}/builder .
+        - docker pull {CI_REGISTRY_IMAGE}/builder
+        - docker build --cache-from {CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
 
 download:
