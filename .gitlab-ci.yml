@@ -6,7 +6,10 @@ stages:
 
 builder:
     stage: pre
-    image: docker:dind
+    image: docker
+    services:
+        - name: docker:dind
+          alias: docker
     script:
         - docker pull ${CI_REGISTRY_IMAGE}/builder
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
