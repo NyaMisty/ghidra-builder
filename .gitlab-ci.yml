@@ -29,8 +29,6 @@ build:
         - cd ghidra 
         #- ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
         - ../gradle*/bin/gradle buildGhidra
-        - cd build/dist/
-        - tar -cvzf ghidra_TORGO_`date +%Y%m%d`.tar.gz .
     artifacts:
         paths:
-            - ghidra_TORGO*.tar.gz
+            - ghidra/build/dist/*
