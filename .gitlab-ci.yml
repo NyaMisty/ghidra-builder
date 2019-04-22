@@ -26,7 +26,8 @@ build:
         - ./download.sh
         - unzip Downloads/gradle*.zip
         - cd ghidra 
-        - ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
+        #- ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
+        - ../gradle*/bin/gradle buildGhidra
     artifacts:
         paths:
             - ghidra
