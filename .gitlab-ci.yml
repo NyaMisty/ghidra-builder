@@ -1,7 +1,6 @@
 stages:
     - pre
     - build
-    - distrib
 
 builder:
     stage: pre
@@ -17,7 +16,7 @@ builder:
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
 
-build:
+.build:
     stage: build
     image: ${CI_REGISTRY_IMAGE}/builder
     variables:
@@ -27,8 +26,23 @@ build:
         - mv flatRepo /root/flatRepo
         - unzip Downloads/gradle*.zip
         - cd ghidra 
-        #- ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
+        - git checkout ${TAG}
         - ../gradle*/bin/gradle buildGhidra
     artifacts:
         paths:
             - ghidra/build/dist/*
+
+dev:
+    extends: .build
+    variables:
+        TAG: master
+
+9.0.1:
+    extends: .build
+    variables:
+        TAG: Ghidra_9.0.1_build
+
+9.0.2:
+    extends: .build
+    variables:
+        TAG: Ghidra_9.0.2_build
