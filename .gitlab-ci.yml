@@ -1,5 +1,6 @@
 stages:
     - pre
+    - download
     - build
 
 builder:
@@ -15,6 +16,15 @@ builder:
         - docker pull ${CI_REGISTRY_IMAGE}/builder || true
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
+
+download:
+    stage: download
+    image: ${CI_REGISTRY_IMAGE}/builder
+    script:
+        - ./download.sh
+    artifacts:
+        paths:
+            - Downloads
 
 .build:
     stage: build
