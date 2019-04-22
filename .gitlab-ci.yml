@@ -10,8 +10,11 @@ builder:
     services:
         - name: docker:dind
           alias: docker
+    variables:
+        DOCKER_HOST: 'tcp://docker:2375'
     script:
-        - docker pull ${CI_REGISTRY_IMAGE}/builder
+        # Try to pull the image, it won't exist if this is the first time the CI has run.
+        - docker pull ${CI_REGISTRY_IMAGE}/builder || true
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
 
