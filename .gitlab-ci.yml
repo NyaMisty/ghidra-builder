@@ -1,0 +1,33 @@
+stages:
+    - pre
+    - download
+    - build
+    - distrib
+
+builder:
+    image: docker
+    script:
+        - docker build -t ${CI_REGISTRY_IMAGE}/builder .
+        - docker push ${CI_REGISTRY_IMAGE}/builder
+
+download:
+    stage: download
+    image: ubuntu
+    script:
+        - ./download.sh
+    artifacts:
+        paths:
+            - Downloads
+            - flatRepo
+
+build:
+    stage: build
+    image: ${CI_REGISTRY_IMAGE}/builder
+    script:
+        - unzip Downloads/gradle*.zip
+        - cd gradle*
+        - ./bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
+    artifacts:
+        paths:
+            - ghidra
+            - ghidra.bin
