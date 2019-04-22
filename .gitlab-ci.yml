@@ -22,7 +22,7 @@ download:
     stage: download
     image: ubuntu
     script:
-        - apt-get update; apt-get install curl
+        - apt-get update; apt-get install -y curl
         - ./download.sh
     artifacts:
         paths:
