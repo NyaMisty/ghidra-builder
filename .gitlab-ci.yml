@@ -35,8 +35,8 @@ build:
         GIT_SUBMODULE_STRATEGY: recursive
     script:
         - unzip Downloads/gradle*.zip
-        - cd gradle*
-        - ./bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
+        - cd ghidra 
+        - ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
     artifacts:
         paths:
             - ghidra
