@@ -29,7 +29,7 @@ build:
         - cd ghidra 
         #- ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
         - ../gradle*/bin/gradle buildGhidra
+        - zip -r ghidra_TORGO_`date +%Y%m%d`.zip ghidra.bin
     artifacts:
         paths:
-            - ghidra
-            - ghidra.bin
+            - ghidra_TORGO*.zip
