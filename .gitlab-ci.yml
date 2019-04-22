@@ -25,6 +25,8 @@ download:
 build:
     stage: build
     image: ${CI_REGISTRY_IMAGE}/builder
+    variables:
+        GIT_SUBMODULE_STRATEGY: recursive
     script:
         - unzip Downloads/gradle*.zip
         - cd gradle*
