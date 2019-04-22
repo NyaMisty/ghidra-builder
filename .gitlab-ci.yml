@@ -1,6 +1,5 @@
 stages:
     - pre
-    - download
     - build
     - distrib
 
@@ -18,23 +17,13 @@ builder:
         - docker build --cache-from ${CI_REGISTRY_IMAGE}/builder -t ${CI_REGISTRY_IMAGE}/builder .
         - docker push ${CI_REGISTRY_IMAGE}/builder
 
-download:
-    stage: download
-    image: ubuntu
-    script:
-        - apt-get update; apt-get install -y curl
-        - ./download.sh
-    artifacts:
-        paths:
-            - Downloads
-            - flatRepo
-
 build:
     stage: build
     image: ${CI_REGISTRY_IMAGE}/builder
     variables:
         GIT_SUBMODULE_STRATEGY: recursive
     script:
+        - ./download.sh
         - unzip Downloads/gradle*.zip
         - cd ghidra 
         - ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
