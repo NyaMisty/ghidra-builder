@@ -24,6 +24,7 @@ build:
         GIT_SUBMODULE_STRATEGY: recursive
     script:
         - ./download.sh
+        - mv flatRepo /root/flatRepo
         - unzip Downloads/gradle*.zip
         - cd ghidra 
         #- ../gradle*/bin/gradle yajswDevUnpack buildGhidra cdtUnpack pyDevUnpack
