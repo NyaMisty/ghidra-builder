@@ -5,6 +5,7 @@ stages:
 builder:
     stage: pre
     image: docker
+    when: manual
     services:
         - name: docker:dind
           alias: docker
