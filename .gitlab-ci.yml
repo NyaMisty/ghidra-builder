@@ -33,6 +33,7 @@ builder:
         - git remote add other ${GHIDRA_REPO} || true
         - git remote update
         - git checkout ${GHIDRA_HEAD}
+        - git log --oneline -n 15
         - ../gradle*/bin/gradle buildGhidra
     artifacts:
         paths:
@@ -41,7 +42,7 @@ builder:
 dev:
     extends: .build
     variables:
-        TAG: master
+        TAG: origin/master
 
 9.0.1:
     extends: .build
