@@ -5,6 +5,7 @@ stages:
 builder:
     stage: pre
     image: docker
+    when: manual
     services:
         - name: docker:dind
           alias: docker
@@ -22,12 +23,17 @@ builder:
     image: ${CI_REGISTRY_IMAGE}/builder
     variables:
         GIT_SUBMODULE_STRATEGY: recursive
+        GHIDRA_REPO: https://github.com/NationalSecurityAgency/ghidra.git
+        GHIDRA_HEAD: ${TAG}
     script:
         - ./download.sh
         - cp -r flatRepo /root/flatRepo
         - unzip Downloads/gradle*.zip
+        - git clone "${GHIDRA_REPO}"
         - cd ghidra 
-        - git checkout ${TAG}
+        - git remote update
+        - git checkout ${GHIDRA_HEAD}
+        - git log --oneline -n 15
         - ../gradle*/bin/gradle buildGhidra
     artifacts:
         paths:
@@ -36,7 +42,7 @@ builder:
 dev:
     extends: .build
     variables:
-        TAG: master
+        TAG: origin/master
 
 9.0.1:
     extends: .build
@@ -49,3 +55,7 @@ dev:
     when: manual
     variables:
         TAG: Ghidra_9.0.2_build
+
+custom:
+    when: manual
+    extends: .build
