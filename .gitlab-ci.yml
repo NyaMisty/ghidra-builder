@@ -29,8 +29,8 @@ builder:
         - ./download.sh
         - cp -r flatRepo /root/flatRepo
         - unzip Downloads/gradle*.zip
+        - git clone "${GHIDRA_REPO}"
         - cd ghidra 
-        - git remote add other ${GHIDRA_REPO} || true
         - git remote update
         - git checkout ${GHIDRA_HEAD}
         - git log --oneline -n 15
