@@ -56,6 +56,12 @@ dev:
     variables:
         TAG: Ghidra_9.0.2_build
 
+9.0.4:
+    extends: .build
+    when: manual
+    variables:
+        TAG: Ghidra_9.0.4_build
+
 custom:
     when: manual
     extends: .build
