@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+echo "[!] This should not be necessary!"
+echo "[!] Run the Ghidra maintained script instead!"
+echo -e "\tgradle --init-script gradle/support/fetchDependencies.gradle init"
+
 echo "[+] Creating Downloads"
 mkdir -p Downloads
 
