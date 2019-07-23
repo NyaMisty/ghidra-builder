@@ -20,44 +20,55 @@ builder:
 
 .build:
     stage: build
-    image: ${CI_REGISTRY_IMAGE}/builder
     variables:
         GIT_SUBMODULE_STRATEGY: recursive
         GHIDRA_REPO: https://github.com/NationalSecurityAgency/ghidra.git
         GHIDRA_HEAD: ${TAG}
     script:
-        - ./download.sh
-        - cp -r flatRepo /root/flatRepo
-        - unzip Downloads/gradle*.zip
         - git clone "${GHIDRA_REPO}"
         - cd ghidra 
         - git remote update
         - git checkout ${GHIDRA_HEAD}
         - git log --oneline -n 15
-        - ../gradle*/bin/gradle buildGhidra
+        - gradle --init-script gradle/support/fetchDependencies.gradle init | grep -v Downloading
+        - gradle buildGhidra
     artifacts:
         paths:
             - ghidra/build/dist/*
 
-dev:
+.build_docker:
     extends: .build
+    image: ${CI_REGISTRY_IMAGE}/builder
+    tags:
+        - docker
+
+linux/dev:
+    extends: .build_docker
     variables:
         TAG: origin/master
 
-9.0.1:
+macOS/dev:
     extends: .build
+    variables:
+        TAG: origin/master
+    tags:
+        - macOS
+    
+
+linux/9.0.1:
+    extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.0.1_build
 
-9.0.2:
-    extends: .build
+linux/9.0.2:
+    extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.0.2_build
 
-9.0.4:
-    extends: .build
+linux/9.0.4:
+    extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.0.4_build
