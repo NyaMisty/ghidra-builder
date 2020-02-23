@@ -76,6 +76,7 @@ linux/9.0.4:
 
 linux/9.1:
     extends: .build_docker
+    when: manual
     variables:
         TAG: Ghidra_9.1_build
 
@@ -83,6 +84,19 @@ macOS/9.1:
     extends: .build_docker
     variables:
         TAG: Ghidra_9.1_build
+    tags:
+        - macOS
+
+linux/9.1.1:
+    extends: .build_docker
+    when: manual
+    variables:
+        TAG: Ghidra_9.1.1_build
+
+macOS/9.1.1:
+    extends: .build_docker
+    variables:
+        TAG: Ghidra_9.1.1_build
     tags:
         - macOS
 
