@@ -30,7 +30,7 @@ builder:
         - git remote update
         - git checkout ${GHIDRA_HEAD}
         - git log --oneline -n 15
-        - gradle --init-script gradle/support/fetchDependencies.gradle init | grep -v Downloading
+        - gradle --init-script gradle/support/fetchDependencies.gradle init
         - gradle buildGhidra
     artifacts:
         paths:
