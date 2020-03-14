@@ -46,7 +46,7 @@ builder:
     extends:
         - .build
     before_script:
-        - choco install openjdk gradle
+        - choco install -y openjdk gradle
     tags:
         - windows
         - shared-windows
