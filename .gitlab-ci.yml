@@ -42,6 +42,22 @@ builder:
     tags:
         - docker
 
+.build_windows:
+    extends:
+        - .build
+    before_script:
+        - choco install openjdk gradle
+    tags:
+        - windows
+        - shared-windows
+        - windows-1809
+
+.build_macos:
+    extends: .build
+    tags:
+        - macOS
+
+
 linux/dev:
     extends: .build_docker
     variables:
@@ -81,12 +97,10 @@ linux/9.1:
         TAG: Ghidra_9.1_build
 
 macOS/9.1:
-    extends: .build_docker
+    extends: .build_macos
     when: manual
     variables:
         TAG: Ghidra_9.1_build
-    tags:
-        - macOS
 
 linux/9.1.1:
     extends: .build_docker
@@ -95,12 +109,10 @@ linux/9.1.1:
         TAG: Ghidra_9.1.1_build
 
 macOS/9.1.1:
-    extends: .build_docker
+    extends: .build_macos
     when: manual
     variables:
         TAG: Ghidra_9.1.1_build
-    tags:
-        - macOS
 
 linux/9.1.2:
     extends: .build_docker
@@ -108,11 +120,14 @@ linux/9.1.2:
         TAG: Ghidra_9.1.2_build
 
 macOS/9.1.2:
-    extends: .build_docker
+    extends: .build_macos
     variables:
         TAG: Ghidra_9.1.2_build
-    tags:
-        - macOS
+
+windows/9.1.2:
+    extends: .build_windows
+    variables:
+        TAG: Ghidra_9.1.2_build
 
 custom:
     when: manual
