@@ -1,0 +1,66 @@
+# vim: expandtab tabstop=2 shiftwidth=2
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    # Weekly
+    - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    name: 'Build Ghidra'
+    strategy:
+      matrix:
+        platform:
+          - os: 'ubuntu-latest'
+            dependency_script: "sudo apt-get update && sudo apt-get install -y bison flex"
+          - os: 'macos-latest'
+            dependency_script: "brew install bison flex curl"
+          # Disable windows because I can't figure this out right now
+          #- os: 'windows-latest'
+          #  dependency_script: |
+          #    choco install visualstudio2017buildtools
+          #    choco install winflexbison
+          #    ren "C:\ProgramData\chocolatey\bin\win_bison.exe" "bison.exe"
+          #    ren "C:\ProgramData\chocolatey\bin\win_flex.exe" "flex.exe"
+        ghidra:
+          - version: '9.2'
+            ref: 'master'
+          - version: '9.1.2'
+            ref: 'Ghidra_9.1.2_build'
+          # - version: '9.1.1'
+          #   ref: 'Ghidra_9.1.1_build'
+          # - version: '9.1'
+          #   ref: 'Ghidra_9.1_build'
+          # - version: '9.0.1'
+          #   ref: 'Ghidra_9.0.1_build'
+    runs-on: "${{ matrix.platform.os }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Set up JDK'
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+          java-package: 'jdk'
+      - name: "Install dependencies"
+        run: "${{ matrix.platform.dependency_script }}"
+      - name: "Clone Ghidra"
+        run: git clone -b "${{ matrix.ghidra.ref }}" "https://github.com/NationalSecurityAgency/ghidra.git" ghidra
+      - name: "Recent history"
+        run: git log --oneline -n 15
+        working-directory: ./ghidra
+      - name: "Fetch dependencies"
+        run: "gradle --init-script gradle/support/fetchDependencies.gradle init"
+        working-directory: ./ghidra
+      - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
+        run: "gradle buildGhidra"
+        working-directory: ./ghidra
+      - name: "Upload package"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
+          path: "ghidra/build/dist/*"
