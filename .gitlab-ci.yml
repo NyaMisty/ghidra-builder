@@ -1,6 +1,7 @@
 stages:
     - pre
     - build
+    - bundle
 
 builder:
     stage: pre
@@ -32,9 +33,29 @@ builder:
         - git log --oneline -n 15
         - gradle --init-script gradle/support/fetchDependencies.gradle init | grep -v Downloading
         - gradle buildGhidra
+        - cd ../
     artifacts:
         paths:
             - ghidra/build/dist/*
+
+.bundler:
+    stage: bundle
+    image: python:3.7-alpine
+    tags:
+        - docker
+    variables:
+        GHIDRA_APP_BUNDLE_REPO: https://gitlab.com/Torgo/ghidra-app-bundle.git
+    script:
+        - apk add git
+        - apk add cdrkit
+        - git clone "${GHIDRA_APP_BUNDLE_REPO}" bundler
+        - cd bundler
+        - pip3 install -r requirements.txt
+        - ./update.py --dmg --version ${GHIDRA_VERSION} --path ../ghidra/build/dist/*.zip
+        - cd ../
+    artifacts:
+        paths:
+            - bundler/*.dmg
 
 .build_docker:
     extends: .build
@@ -53,6 +74,13 @@ macOS/dev:
         TAG: origin/master
     tags:
         - macOS
+
+macOS/dmg/dev:
+    extends: .bundler
+    needs:
+        - macOS/dev
+    variables:
+        GHIDRA_VERSION: "DEV"
     
 # -----------------
 
@@ -113,6 +141,13 @@ macOS/9.1.2:
         TAG: Ghidra_9.1.2_build
     tags:
         - macOS
+
+macOS/dmg/9.1.2:
+    extends: .bundler
+    needs:
+        - macOS/9.1.2
+    variables:
+        GHIDRA_VERSION: "9.1.2"
 
 custom:
     when: manual
