@@ -59,7 +59,11 @@ jobs:
       - name: "Install dependencies"
         run: "${{ matrix.platform.dependency_script }}"
       - name: "Clone Ghidra"
-        run: git clone -b "${{ matrix.ghidra.ref }}" "https://github.com/NationalSecurityAgency/ghidra.git" ghidra
+        uses: actions/checkout@v2
+        with:
+          repository: 'NationalSecurityAgency/ghidra'
+          ref: "${{ matrix.ghidra.ref }}"
+          path: "ghidra"
       - name: "Apply patches"
         run: git apply ../patches/*
         working-directory: ./ghidra
@@ -78,6 +82,7 @@ jobs:
           name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
           path: "ghidra/build/dist/*"
   bundle:
+    name: 'Make DMG - ${{ matrix.ghidra.version }}'
     runs-on: ubuntu-latest
     container: python:3.7-alpine
     needs: build
@@ -86,16 +91,20 @@ jobs:
         platform:
           - os: 'macos-latest'
         ghidra:
+          - version: '9.2.2'
+            ref: 'Ghidra_9.2.2_build'
+          - version: '9.2.1'
+            ref: 'Ghidra_9.2.1_build'
           - version: '9.2'
-            ref: 'master'
+            ref: 'Ghidra_9.2_build'
           - version: '9.1.2'
             ref: 'Ghidra_9.1.2_build'
-          # - version: '9.1.1'
-          #   ref: 'Ghidra_9.1.1_build'
-          # - version: '9.1'
-          #   ref: 'Ghidra_9.1_build'
-          # - version: '9.0.1'
-          #   ref: 'Ghidra_9.0.1_build'
+          - version: 'dev'
+            ref: 'master'
+          - version: 'debugger'
+            ref: 'debugger'
+          - version: 'stable'
+            ref: 'stable'
     steps:
       - uses: actions/checkout@v2
         with:
