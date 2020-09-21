@@ -1,6 +1,8 @@
 Ghidra Builder
 ==============
 
+![Ghidra Builder](doc/ghidra_builder.png)
+
 [![CI](https://github.com/TorgoTorgo/ghidra-builder/workflows/CI/badge.svg)](https://github.com/TorgoTorgo/ghidra-builder/actions?query=workflow%3ACI+branch%3Amaster)
 [![pipeline status](https://gitlab.com/Torgo/ghidra-builder/badges/master/pipeline.svg)](https://gitlab.com/Torgo/ghidra-builder/pipelines/latest)
 
