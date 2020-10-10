@@ -68,10 +68,22 @@ linux/dev:
     variables:
         TAG: origin/master
 
+linux/stable:
+    extends: .build_docker
+    variables:
+        TAG: origin/stable
+
 macOS/dev:
     extends: .build
     variables:
         TAG: origin/master
+    tags:
+        - macOS
+
+macOS/stable:
+    extends: .build
+    variables:
+        TAG: origin/stable
     tags:
         - macOS
 
@@ -80,7 +92,14 @@ macOS/dmg/dev:
     needs:
         - macOS/dev
     variables:
-        GHIDRA_VERSION: "DEV"
+        ghidra_version: "dev"
+
+macOS/dmg/stable:
+    extends: .bundler
+    needs:
+        - macOS/stable
+    variables:
+        ghidra_version: "stable"
     
 # -----------------
 
