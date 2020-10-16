@@ -92,14 +92,14 @@ macOS/dmg/dev:
     needs:
         - macOS/dev
     variables:
-        ghidra_version: "dev"
+        GHIDRA_VERSION: "dev"
 
 macOS/dmg/stable:
     extends: .bundler
     needs:
         - macOS/stable
     variables:
-        ghidra_version: "stable"
+        GHIDRA_VERSION: "stable"
     
 # -----------------
 
