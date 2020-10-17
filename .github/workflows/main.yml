@@ -110,6 +110,7 @@ jobs:
         with:
           repository: 'TorgoTorgo/Ghidra-App-Bundle'
       - name: Download Ghidra ${{ matrix.ghidra.version }}
+        id: download
         uses: actions/download-artifact@v2
         with:
           name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
@@ -121,7 +122,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Download and package Ghidra
         shell: sh
-        run: ./update.py --dmg --path "*.zip" --version "${{ matrix.ghidra.version }}"
+        run: ./update.py --dmg --path "${{steps.download.outputs.download-path}}" --version "${{ matrix.ghidra.version }}"
       - name: "Upload package"
         uses: actions/upload-artifact@v2
         with:
