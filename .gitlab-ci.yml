@@ -156,7 +156,6 @@ macOS/9.1.1:
 
 linux/9.2:
     extends: .build_docker
-    when: manual
     variables:
         TAG: Ghidra_9.2_build
         GHIDRA_VERSION: "9.2"
@@ -172,12 +171,14 @@ macOS/9.2:
 
 linux/9.1.2:
     extends: .build_docker
+    when: manual
     variables:
         TAG: Ghidra_9.1.2_build
         GHIDRA_VERSION: "9.1.2"
 
 macOS/9.1.2:
     extends: .build_docker
+    when: manual
     variables:
         TAG: Ghidra_9.1.2_build
         GHIDRA_VERSION: "9.1.2"
@@ -186,6 +187,7 @@ macOS/9.1.2:
 
 macOS/dmg/9.1.2:
     extends: .bundler
+    when: manual
     needs:
         - macOS/9.1.2
     variables:
