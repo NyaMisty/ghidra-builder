@@ -27,14 +27,7 @@ builder:
         GHIDRA_REPO: https://github.com/NationalSecurityAgency/ghidra.git
         GHIDRA_HEAD: ${TAG}
     script:
-        - git clone "${GHIDRA_REPO}"
-        - cd ghidra 
-        - git remote update
-        - git checkout ${GHIDRA_HEAD}
-        - git log --oneline -n 15
-        - gradle --init-script gradle/support/fetchDependencies.gradle init | grep -v Downloading
-        - gradle buildGhidra
-        - cd ../
+        - "./build.sh"
     artifacts:
         paths:
             - ghidra/build/dist/*
@@ -67,24 +60,28 @@ builder:
 linux/dev:
     extends: .build_docker
     variables:
-        TAG: origin/master
+        TAG: "master"
+        GHIDRA_VERSION: "DEV"
 
 linux/stable:
     extends: .build_docker
     variables:
-        TAG: origin/stable
+        TAG: "stable"
+        ghidra_version: "STABLE"
 
 macOS/dev:
     extends: .build
     variables:
-        TAG: origin/master
+        TAG: "master"
+        GHIDRA_VERSION: "DEV"
     tags:
         - macOS
 
 macOS/stable:
     extends: .build
     variables:
-        TAG: origin/stable
+        TAG: "stable"
+        GHIDRA_VERSION: "STABLE"
     tags:
         - macOS
 
@@ -109,30 +106,35 @@ linux/9.0.1:
     when: manual
     variables:
         TAG: Ghidra_9.0.1_build
+        GHIDRA_VERSION: "9.0.1"
 
 linux/9.0.2:
     extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.0.2_build
+        GHIDRA_VERSION: "9.0.2"
 
 linux/9.0.4:
     extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.0.4_build
+        GHIDRA_VERSION: "9.0.4"
 
 linux/9.1:
     extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.1_build
+        GHIDRA_VERSION: "9.1"
 
 macOS/9.1:
     extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.1_build
+        GHIDRA_VERSION: "9.1"
     tags:
         - macOS
 
@@ -141,12 +143,30 @@ linux/9.1.1:
     when: manual
     variables:
         TAG: Ghidra_9.1.1_build
+        GHIDRA_VERSION: "9.1.1"
 
 macOS/9.1.1:
     extends: .build_docker
     when: manual
     variables:
         TAG: Ghidra_9.1.1_build
+        GHIDRA_VERSION: "9.1.1"
+    tags:
+        - macOS
+
+linux/9.2:
+    extends: .build_docker
+    when: manual
+    variables:
+        TAG: Ghidra_9.2_build
+        GHIDRA_VERSION: "9.2"
+
+macOS/9.2:
+    extends: .build_docker
+    when: manual
+    variables:
+        TAG: Ghidra_9.2_build
+        GHIDRA_VERSION: "9.2"
     tags:
         - macOS
 
@@ -154,11 +174,13 @@ linux/9.1.2:
     extends: .build_docker
     variables:
         TAG: Ghidra_9.1.2_build
+        GHIDRA_VERSION: "9.1.2"
 
 macOS/9.1.2:
     extends: .build_docker
     variables:
         TAG: Ghidra_9.1.2_build
+        GHIDRA_VERSION: "9.1.2"
     tags:
         - macOS
 
