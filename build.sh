@@ -6,6 +6,7 @@ git clone "${GHIDRA_REPO}"
 cd ghidra
 git remote update
 git checkout ${GHIDRA_HEAD}
+git apply ../patches/*
 git log --oneline -n 15
 gradle --init-script gradle/support/fetchDependencies.gradle init | grep -v Downloading
 gradle buildGhidra
