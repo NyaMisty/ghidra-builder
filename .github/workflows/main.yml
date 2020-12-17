@@ -34,6 +34,8 @@ jobs:
             ref: 'Ghidra_9.1.2_build'
           - version: 'dev'
             ref: 'master'
+          - version: 'debugger'
+            ref: 'debugger'
           - version: 'stable'
             ref: 'stable'
           # - version: '9.1.1'

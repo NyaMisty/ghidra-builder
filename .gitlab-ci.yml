@@ -63,6 +63,12 @@ linux/dev:
         TAG: "master"
         GHIDRA_VERSION: "DEV"
 
+linux/debugger:
+    extends: .build_docker
+    variables:
+        TAG: "debugger"
+        GHIDRA_VERSION: "DEBUGGER"
+
 linux/stable:
     extends: .build_docker
     variables:
@@ -85,12 +91,27 @@ macOS/stable:
     tags:
         - macOS
 
+macOS/debugger:
+    extends: .build
+    variables:
+        TAG: "debugger"
+        GHIDRA_VERSION: "DEBUGGER"
+    tags:
+        - macOS
+
 macOS/dmg/dev:
     extends: .bundler
     needs:
         - macOS/dev
     variables:
         GHIDRA_VERSION: "dev"
+
+macOS/dmg/debugger:
+    extends: .bundler
+    needs:
+        - macOS/debugger
+    variables:
+        GHIDRA_VERSION: "debugger"
 
 macOS/dmg/stable:
     extends: .bundler
