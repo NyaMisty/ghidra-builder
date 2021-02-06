@@ -60,9 +60,9 @@ jobs:
         run: "${{ matrix.platform.dependency_script }}"
       - name: "Clone Ghidra"
         run: git clone -b "${{ matrix.ghidra.ref }}" "https://github.com/NationalSecurityAgency/ghidra.git" ghidra
-      - name: "Apply patches"
-        run: git apply ../patches/*
-        working-directory: ./ghidra
+      #- name: "Apply patches"
+      #  run: git apply ../patches/*
+      #  working-directory: ./ghidra
       - name: "Recent history"
         run: git log --oneline -n 15
         working-directory: ./ghidra
