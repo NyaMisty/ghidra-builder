@@ -11,7 +11,9 @@ on:
     branches: [ master ]
   schedule:
     # Daily
-    - cron: '0 8 * * *'
+    #- cron: '0 8 * * *'
+    # Every 3 days
+    - cron: '0 0 */3 * *'
 
 jobs:
   build:
