@@ -56,14 +56,15 @@ jobs:
       - name: "Recent history"
         run: git log --oneline -n 15
         working-directory: ./ghidra
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      #- name: Setup tmate session
+      #  uses: mxschmitt/action-tmate@v3
       #- name: "Fetch dependencies"
       #  run: "gradle --init-script gradle/support/fetchDependencies.gradle init"
       #  working-directory: ./ghidra
       - name: "Fetch dependencies"
         uses: eskatos/gradle-command-action@v1
         with:
+          build-root-directory: ghidra
           gradle-version: 6.8.3
           arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
       #- name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
@@ -72,6 +73,7 @@ jobs:
       - name: "Fetch dependencies"
         uses: eskatos/gradle-command-action@v1
         with:
+          build-root-directory: ghidra
           gradle-version: 6.8.3
           arguments: --console plain --quiet buildGhidra
       - name: "Upload package"
