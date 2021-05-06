@@ -19,11 +19,10 @@ jobs:
     strategy:
       matrix:
         platform:
-          #- os: 'ubuntu-latest'
-          #  dependency_script: "sudo apt-get update && sudo apt-get install -y bison flex"
-          #- os: 'macos-latest'
-          #  dependency_script: "brew install bison flex curl"
-          # Disable windows because I can't figure this out right now
+          - os: 'ubuntu-latest'
+            dependency_script: "sudo apt-get update && sudo apt-get install -y bison flex"
+          - os: 'macos-latest'
+            dependency_script: "brew install bison flex curl"
           - os: 'windows-latest'
             dependency_script: |
               choco install visualstudio2017buildtools
@@ -34,10 +33,10 @@ jobs:
         ghidra:
           - version: 'dev'
             ref: 'master'
-          #- version: 'debugger'
-          #  ref: 'debugger'
-          #- version: 'stable'
-          #  ref: 'stable'
+          - version: 'debugger'
+            ref: 'debugger'
+          - version: 'stable'
+            ref: 'stable'
     runs-on: "${{ matrix.platform.os }}"
     steps:
       - uses: actions/checkout@v2
@@ -48,6 +47,7 @@ jobs:
           java-package: 'jdk'
       - name: "Install dependencies"
         run: "${{ matrix.platform.dependency_script }}"
+      
       - name: "Clone Ghidra"
         run: git clone -b "${{ matrix.ghidra.ref }}" "https://github.com/NationalSecurityAgency/ghidra.git" ghidra
       #- name: "Apply patches"
@@ -56,26 +56,30 @@ jobs:
       - name: "Recent history"
         run: git log --oneline -n 15
         working-directory: ./ghidra
+        
       #- name: Setup tmate session
       #  uses: mxschmitt/action-tmate@v3
+      
       #- name: "Fetch dependencies"
       #  run: "gradle --init-script gradle/support/fetchDependencies.gradle init"
       #  working-directory: ./ghidra
+      #- name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
+      #  run: "gradle buildGhidra"
+      #  working-directory: ./ghidra
+      
       - name: "Fetch dependencies"
         uses: eskatos/gradle-command-action@v1
         with:
           build-root-directory: ghidra
           gradle-version: 6.8.3
           arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
-      #- name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-      #  run: "gradle buildGhidra"
-      #  working-directory: ./ghidra
-      - name: "Fetch dependencies"
+      - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
         uses: eskatos/gradle-command-action@v1
         with:
           build-root-directory: ghidra
           gradle-version: 6.8.3
           arguments: --console plain --quiet buildGhidra
+          
       - name: "Upload package"
         uses: actions/upload-artifact@v2
         with:
