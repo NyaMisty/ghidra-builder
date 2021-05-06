@@ -92,8 +92,29 @@ jobs:
           gradle-version: 6.8.3
           arguments: --console plain --quiet buildGhidra
           
+      #- name: "Upload package"
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
+      #    path: "ghidra/build/dist/*.zip"
+      
       - name: "Upload package"
-        uses: actions/upload-artifact@v2
+        uses: kittaakos/upload-artifact-as-is@v0
         with:
-          #name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
-          path: "ghidra/build/dist/*.zip"
+          path: ghidra/build/dist/
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: mkdir dist
+      - uses: actions/download-artifact@master
+        with:
+          path: dist
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - uses: ncipollo/release-action@v1
+        with:
+          name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
+          artifacts: "dist/*.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
