@@ -58,12 +58,22 @@ jobs:
         working-directory: ./ghidra
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+      #- name: "Fetch dependencies"
+      #  run: "gradle --init-script gradle/support/fetchDependencies.gradle init"
+      #  working-directory: ./ghidra
       - name: "Fetch dependencies"
-        run: "gradle --init-script gradle/support/fetchDependencies.gradle init"
-        working-directory: ./ghidra
-      - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-        run: "gradle buildGhidra"
-        working-directory: ./ghidra
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: 6.8.3
+          arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+      #- name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
+      #  run: "gradle buildGhidra"
+      #  working-directory: ./ghidra
+      - name: "Fetch dependencies"
+        uses: eskatos/gradle-command-action@v1
+        with:
+          gradle-version: 6.8.3
+          arguments: --console plain --quiet buildGhidra
       - name: "Upload package"
         uses: actions/upload-artifact@v2
         with:
