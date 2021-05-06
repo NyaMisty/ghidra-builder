@@ -70,7 +70,7 @@ jobs:
       #  working-directory: ./ghidra
       
       - name: "Precreate download dir"
-        run: mkdir ghidra/dependencies/downloads
+        run: mkdir -p ghidra/dependencies/downloads
       - name: "Restore Dependencies Cache"
         uses: actions/cache@v2.1.5
         with:
