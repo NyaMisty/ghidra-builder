@@ -69,12 +69,22 @@ jobs:
       #  run: "gradle buildGhidra"
       #  working-directory: ./ghidra
       
+      - name: "Precreate download dir"
+        run: mkdir ghidra/dependencies/downloads
+      - name: "Restore Dependencies Cache"
+        uses: actions/cache@v2.1.5
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: ./ghidra/dependencies/downloads
+          # An explicit key for restoring and saving the cache
+          key: "${{ matrix.ghidra.version }}-${{ matrix.platform.os }}-ghdepends"
       - name: "Fetch dependencies"
         uses: eskatos/gradle-command-action@v1
         with:
           build-root-directory: ghidra
           gradle-version: 6.8.3
           arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+      
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
         uses: eskatos/gradle-command-action@v1
         with:
