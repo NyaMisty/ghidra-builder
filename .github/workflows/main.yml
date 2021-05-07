@@ -97,6 +97,7 @@ jobs:
           path: ghidra/build/dist/
   deploy:
     name: 'Push to Release'
+    if: always()
     needs: build
     runs-on: ubuntu-latest
     steps:
