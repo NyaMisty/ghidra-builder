@@ -108,7 +108,7 @@ jobs:
       - name: Rearrange artifacts
         run: |
           mkdir dist1
-          find dist -type f -name "*" mv {} dist1 \;
+          find dist -type f -name "*" -exec mv {} dist1 \;
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
