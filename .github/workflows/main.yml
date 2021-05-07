@@ -19,6 +19,7 @@ jobs:
   build:
     name: 'Build Ghidra - ${{ matrix.platform.os }} - ${{ matrix.ghidra.version }}'
     strategy:
+      fail-fast: false
       matrix:
         platform:
           - os: 'ubuntu-latest'
