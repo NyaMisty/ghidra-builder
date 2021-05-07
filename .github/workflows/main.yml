@@ -92,7 +92,7 @@ jobs:
       #    name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
       #    path: "ghidra/build/dist/*.zip"
       - name: "Upload package"
-        uses: NyaMisty/upload-artifact-as-is@v0
+        uses: NyaMisty/upload-artifact-as-is@nightly
         with:
           path: ghidra/build/dist/
   deploy:
