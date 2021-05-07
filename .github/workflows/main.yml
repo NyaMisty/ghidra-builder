@@ -105,6 +105,10 @@ jobs:
         uses: actions/download-artifact@master
         with:
           path: dist
+      - name: Rearrange artifacts
+        run: |
+          mkdir dist1
+          find dist -type f -name "*" mv {} dist1 \;
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
@@ -114,5 +118,5 @@ jobs:
           name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
           commit: ${{ github.sha }}
           tag: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
-          artifacts: "dist/**/*.zip"
+          artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
