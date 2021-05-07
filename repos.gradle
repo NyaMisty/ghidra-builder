@@ -1,9 +1,0 @@
-ext.HOME = System.getProperty('user.home')
-
-allprojects {
-    repositories {
-        mavenCentral()
-        jcenter()
-        flatDir name:'flat', dirs:["$HOME/flatRepo"]
-    }
-}

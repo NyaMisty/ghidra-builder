@@ -11,9 +11,9 @@ on:
     branches: [ master ]
   schedule:
     # Daily
-    #- cron: '0 8 * * *'
+    - cron: '0 8 * * *'
     # Every 3 days
-    - cron: '0 0 */3 * *'
+    #- cron: '0 0 */3 * *'
 
 jobs:
   build:
@@ -35,10 +35,10 @@ jobs:
         ghidra:
           - version: 'dev'
             ref: 'master'
-          #- version: 'debugger'
-          #  ref: 'debugger'
-          #- version: 'stable'
-          #  ref: 'stable'
+          - version: 'debugger'
+            ref: 'debugger'
+          - version: 'stable'
+            ref: 'stable'
     runs-on: "${{ matrix.platform.os }}"
     steps:
       - uses: actions/checkout@v2
