@@ -112,7 +112,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
-          commit: HEAD
+          commit: ${{ github.sha }}
           tag: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
           artifacts: "dist/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
