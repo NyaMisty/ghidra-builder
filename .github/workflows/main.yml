@@ -87,15 +87,15 @@ jobs:
           gradle-version: 6.8.3
           arguments: --console plain --quiet buildGhidra
       
-      #- name: "Upload package"
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
-      #    path: "ghidra/build/dist/*.zip"
       - name: "Upload package"
-        uses: NyaMisty/upload-artifact-as-is@nightly
+        uses: NyaMisty/upload-artifact@nightly
         with:
-          path: ghidra/build/dist/
+          name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
+          path: "ghidra/build/dist/*.zip"
+      #- name: "Upload package"
+      #  uses: NyaMisty/upload-artifact-as-is@nightly
+      #  with:
+      #    path: ghidra/build/dist/
   deploy:
     name: 'Push to Release'
     if: always()
