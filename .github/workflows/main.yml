@@ -90,7 +90,7 @@ jobs:
       - name: "Upload package"
         uses: NyaMisty/upload-artifact@nightly
         with:
-          name: "Ghidra ${{ matrix.ghidra.version }} - ${{ matrix.platform.os }}"
+          name: "Ghidra_${{ matrix.ghidra.version }}_${{ matrix.platform.os }}"
           path: "ghidra/build/dist/*.zip"
       #- name: "Upload package"
       #  uses: NyaMisty/upload-artifact-as-is@nightly
@@ -110,7 +110,7 @@ jobs:
       - name: Rearrange artifacts
         run: |
           mkdir dist1
-          find dist -type f -name "*" -exec mv {} dist1 \;
+          find dist -type f -name "*" -exec sh -c 'mv "{}" "dist1/$( basename "$( dirname "{}" )" )_$( basename "{}" )"' \;
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
