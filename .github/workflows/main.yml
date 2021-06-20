@@ -36,8 +36,6 @@ jobs:
         ghidra:
           - version: 'dev'
             ref: 'master'
-          - version: 'debugger'
-            ref: 'debugger'
           - version: 'stable'
             ref: 'stable'
     runs-on: "${{ matrix.platform.os }}"
