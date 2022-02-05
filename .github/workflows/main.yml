@@ -100,6 +100,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: mkdir dist
       - name: Download built artifacts
         uses: actions/download-artifact@master
@@ -120,3 +121,4 @@ jobs:
           tag: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
           artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
