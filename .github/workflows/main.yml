@@ -17,6 +17,7 @@ on:
 
 env:
   GRADLE_VERSION: 7.5.1
+  JAVA_VERSION: '17'
 
 jobs:
   build:
@@ -47,7 +48,7 @@ jobs:
       - name: 'Set up JDK'
         uses: actions/setup-java@v1
         with:
-          java-version: '11'
+          java-version: ${{ env.JAVA_VERSION }}
           java-package: 'jdk'
       - name: "Install dependencies"
         run: "${{ matrix.platform.dependency_script }}"
