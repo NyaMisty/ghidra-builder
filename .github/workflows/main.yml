@@ -15,6 +15,9 @@ on:
     # Every 3 days
     #- cron: '0 0 */3 * *'
 
+env:
+  GRADLE_VERSION: 7.5.1
+
 jobs:
   build:
     name: 'Build Ghidra - ${{ matrix.platform.os }} - ${{ matrix.ghidra.version }}'
@@ -75,14 +78,14 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           build-root-directory: ghidra
-          gradle-version: 6.8.3
+          gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
         uses: eskatos/gradle-command-action@v1
         with:
           build-root-directory: ghidra
-          gradle-version: 7.5.1
+          gradle-version: ${{ env.GRADLE_VERSION }}
           arguments: --console plain --quiet buildGhidra
       
       - name: "Upload package"
