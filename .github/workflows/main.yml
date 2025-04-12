@@ -80,6 +80,8 @@ jobs:
           
       - name: 'Set up Gradle'
         uses: gradle/actions/setup-gradle@v4
+
+      - name: 'Set up Gradle executable'
         run: chmod +x ./gradlew
         
       - name: "Fetch dependencies"
