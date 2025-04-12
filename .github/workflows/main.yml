@@ -77,12 +77,17 @@ jobs:
           path: ./ghidra/dependencies/downloads
           # An explicit key for restoring and saving the cache
           key: "${{ matrix.ghidra.version }}-${{ matrix.platform.os }}-ghdepends"
-      - name: "Fetch dependencies"
+          
+      - name: 'Set up Gradle'
         uses: gradle/actions/setup-gradle@v4
+          
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        
+      - name: "Fetch dependencies"
       - run: ./gradlew --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-        uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew --console plain --quiet buildGhidra
       
       - name: "Upload package"
