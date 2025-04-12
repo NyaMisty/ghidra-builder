@@ -83,9 +83,13 @@ jobs:
         
       - name: "Fetch dependencies"
         run: gradle --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+        with:
+           build-root-directory: ghidra
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
         run: gradle --console plain --quiet buildGhidra
+        with:
+           build-root-directory: ghidra
       
       - name: "Upload package"
         uses: NyaMisty/upload-artifact@nightly
