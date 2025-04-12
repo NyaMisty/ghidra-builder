@@ -85,10 +85,10 @@ jobs:
         run: chmod +x ./gradlew
         
       - name: "Fetch dependencies"
-      - run: ./gradlew --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+        run: ./gradlew --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-      - run: ./gradlew --console plain --quiet buildGhidra
+        run: ./gradlew --console plain --quiet buildGhidra
       
       - name: "Upload package"
         uses: NyaMisty/upload-artifact@nightly
