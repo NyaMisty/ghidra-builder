@@ -16,7 +16,7 @@ on:
     #- cron: '0 0 */3 * *'
 
 env:
-  GRADLE_VERSION: 8.13
+  GRADLE_VERSION: '8.7'
   JAVA_VERSION: '21'
   JAVA_DISTRIBUTION: 'temurin'
 
@@ -70,6 +70,7 @@ jobs:
       # Cache dependencies' downloading
       - name: "Precreate download dir"
         run: mkdir -p ghidra/dependencies/downloads
+        
       - name: "Restore Dependencies Cache"
         uses: actions/cache@v4.2.0
         with:
@@ -78,8 +79,10 @@ jobs:
           # An explicit key for restoring and saving the cache
           key: "${{ matrix.ghidra.version }}-${{ matrix.platform.os }}-ghdepends"
           
-      - name: 'Set up Gradle'
+      - name: "Set up Gradle"
         uses: gradle/actions/setup-gradle@v4
+        with:
+         gradle-version: ${{ env.GRADLE_VERSION }}
         
       - name: "Fetch dependencies"
         run: gradle --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
