@@ -80,15 +80,12 @@ jobs:
           
       - name: 'Set up Gradle'
         uses: gradle/actions/setup-gradle@v4
-
-      - name: 'Set up Gradle executable'
-        run: chmod +x ./gradlew
         
       - name: "Fetch dependencies"
-        run: ./gradlew --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+        run: gradle --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-        run: ./gradlew --console plain --quiet buildGhidra
+        run: gradle --console plain --quiet buildGhidra
       
       - name: "Upload package"
         uses: NyaMisty/upload-artifact@nightly
