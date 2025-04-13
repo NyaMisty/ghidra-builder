@@ -93,14 +93,11 @@ jobs:
         working-directory: ghidra
       
       - name: "Upload package"
-        uses: NyaMisty/upload-artifact@nightly
+        uses: actions/upload-artifact@v4
         with:
           name: "Ghidra_${{ matrix.ghidra.version }}_${{ matrix.platform.os }}"
           path: "ghidra/build/dist/*.zip"
-      #- name: "Upload package"
-      #  uses: NyaMisty/upload-artifact-as-is@nightly
-      #  with:
-      #    path: ghidra/build/dist/
+
   deploy:
     name: 'Push to Release'
     if: always()
@@ -119,13 +116,13 @@ jobs:
           find dist -type f -name "*" -exec sh -c 'mv "{}" "dist1/$( basename "$( dirname "{}" )" )_$( basename "{}" )"' \;
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "BUILD_TIME=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
       - name: Pushing to release
         uses: ncipollo/release-action@v1
         with:
-          name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
+          name: "GhidraNightlyBuild-$BUILD_TIME"
           commit: ${{ github.sha }}
-          tag: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
+          tag: "GhidraNightlyBuild-$$BUILD_TIME"
           artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
