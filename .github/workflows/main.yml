@@ -120,9 +120,9 @@ jobs:
       - name: Pushing to release
         uses: ncipollo/release-action@v1
         with:
-          name: "GhidraNightlyBuild-$BUILD_TIME"
+          name: "GhidraNightlyBuild-{{steps.date.outputs.BUILD_TIME}}"
           commit: ${{ github.sha }}
-          tag: "GhidraNightlyBuild-$$BUILD_TIME"
+          tag: "GhidraNightlyBuild-{{steps.date.outputs.BUILD_TIME}}"
           artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
