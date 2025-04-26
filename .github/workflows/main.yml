@@ -16,8 +16,9 @@ on:
     #- cron: '0 0 */3 * *'
 
 env:
-  GRADLE_VERSION: 7.5.1
-  JAVA_VERSION: '17'
+  GRADLE_VERSION: '8.7'
+  JAVA_VERSION: '21'
+  JAVA_DISTRIBUTION: 'temurin'
 
 jobs:
   build:
@@ -44,12 +45,13 @@ jobs:
             ref: 'stable'
     runs-on: "${{ matrix.platform.os }}"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: 'Set up JDK'
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
           java-package: 'jdk'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
       - name: "Install dependencies"
         run: "${{ matrix.platform.dependency_script }}"
       
@@ -68,43 +70,41 @@ jobs:
       # Cache dependencies' downloading
       - name: "Precreate download dir"
         run: mkdir -p ghidra/dependencies/downloads
+        
       - name: "Restore Dependencies Cache"
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v4.2.0
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: ./ghidra/dependencies/downloads
           # An explicit key for restoring and saving the cache
           key: "${{ matrix.ghidra.version }}-${{ matrix.platform.os }}-ghdepends"
-      - name: "Fetch dependencies"
-        uses: eskatos/gradle-command-action@v1
+          
+      - name: "Set up Gradle"
+        uses: gradle/actions/setup-gradle@v4
         with:
-          build-root-directory: ghidra
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+         gradle-version: ${{ env.GRADLE_VERSION }}
+        
+      - name: "Fetch dependencies"
+        run: gradle --console plain --quiet --init-script gradle/support/fetchDependencies.gradle init
+        working-directory: ghidra
       
       - name: "Building Ghidra ${{ matrix.ghidra.version }} from ${{ matrix.ghidra.ref }}"
-        uses: eskatos/gradle-command-action@v1
-        with:
-          build-root-directory: ghidra
-          gradle-version: ${{ env.GRADLE_VERSION }}
-          arguments: --console plain --quiet buildGhidra
+        run: gradle --console plain --quiet buildGhidra
+        working-directory: ghidra
       
       - name: "Upload package"
-        uses: NyaMisty/upload-artifact@nightly
+        uses: actions/upload-artifact@v4
         with:
           name: "Ghidra_${{ matrix.ghidra.version }}_${{ matrix.platform.os }}"
           path: "ghidra/build/dist/*.zip"
-      #- name: "Upload package"
-      #  uses: NyaMisty/upload-artifact-as-is@nightly
-      #  with:
-      #    path: ghidra/build/dist/
+
   deploy:
     name: 'Push to Release'
     if: always()
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: mkdir dist
       - name: Download built artifacts
         uses: actions/download-artifact@master
@@ -116,13 +116,20 @@ jobs:
           find dist -type f -name "*" -exec sh -c 'mv "{}" "dist1/$( basename "$( dirname "{}" )" )_$( basename "{}" )"' \;
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
       - name: Pushing to release
         uses: ncipollo/release-action@v1
         with:
-          name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
+          name: "GhidraNightlyBuild-${{steps.date.outputs.date}}"
           commit: ${{ github.sha }}
-          tag: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
+          tag: "GhidraNightlyBuild-${{steps.date.outputs.date}}"
           artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
+
+  keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
