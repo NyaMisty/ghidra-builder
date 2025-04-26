@@ -125,4 +125,11 @@ jobs:
           tag: "GhidraNightlyBuild-${{steps.date.outputs.date}}"
           artifacts: "dist1/*.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: gautamkrishnar/keepalive-workflow@master # using the workflow with default settings
+
+  keepalive:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
