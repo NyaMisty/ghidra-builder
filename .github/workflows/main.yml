@@ -113,8 +113,8 @@ jobs:
         id: gate
         shell: bash
         run: |
-          linux_count=$(find dist -type f -name '*ubuntu-latest*.zip' | awk 'END { print NR }')
-          windows_count=$(find dist -type f -name '*windows-latest*.zip' | awk 'END { print NR }')
+          linux_count=$(find dist -type f -path '*ubuntu-latest*/*.zip' | awk 'END { print NR }')
+          windows_count=$(find dist -type f -path '*windows-latest*/*.zip' | awk 'END { print NR }')
           echo "linux_count=$linux_count" >> "$GITHUB_OUTPUT"
           echo "windows_count=$windows_count" >> "$GITHUB_OUTPUT"
           if [ "$linux_count" -gt 0 ] && [ "$windows_count" -gt 0 ]; then
