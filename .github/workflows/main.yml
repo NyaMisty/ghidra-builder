@@ -109,17 +109,30 @@ jobs:
         continue-on-error: true
         with:
           path: dist
+      - name: Check required artifacts
+        id: gate
+        shell: bash
+        run: |
+          linux_count=$(find dist -type f -name '*ubuntu-latest*.zip' | awk 'END { print NR }')
+          windows_count=$(find dist -type f -name '*windows-latest*.zip' | awk 'END { print NR }')
+          echo "linux_count=$linux_count" >> "$GITHUB_OUTPUT"
+          echo "windows_count=$windows_count" >> "$GITHUB_OUTPUT"
+          if [ "$linux_count" -gt 0 ] && [ "$windows_count" -gt 0 ]; then
+            echo "release_ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_ok=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Rearrange artifacts
-        if: ${{ hashFiles('dist/**/*.zip') != '' }}
+        if: ${{ steps.gate.outputs.release_ok == 'true' }}
         run: |
           mkdir dist1
           find dist -type f -name "*" -exec sh -c 'mv "{}" "dist1/$( basename "$( dirname "{}" )" )_$( basename "{}" )"' \;
       - name: Get current date
         id: date
-        if: ${{ hashFiles('dist1/*.zip') != '' }}
+        if: ${{ steps.gate.outputs.release_ok == 'true' }}
         run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
       - name: Pushing to release
-        if: ${{ hashFiles('dist1/*.zip') != '' }}
+        if: ${{ steps.gate.outputs.release_ok == 'true' }}
         uses: ncipollo/release-action@v1
         with:
           name: "GhidraNightlyBuild-${{ steps.date.outputs.date }}"
